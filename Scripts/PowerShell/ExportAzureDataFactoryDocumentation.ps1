@@ -1,4 +1,4 @@
-<#
+﻿<#
 .History
    21/07/2020 - 1.0 - Initial release - David Alzamendi
 .Synopsis
@@ -18,16 +18,15 @@
     (
         # Tenant Id
         [Parameter(Mandatory=$true)]
-        $TenantId
- 
+        $TenantId,
+        # Define folder name
+        [Parameter(Mandatory=$true)]
+        $OutputFolder
     )
 
     Begin
     {
         write-host "Starting tenant" $TenantId
-
-        # Define folder name
-        $OutputFolder =  'C:\temp\'
 
         # Define file names
         $ADFOutputFile = $OutputFolder + "ADF_$(get-date -f yyyyMMdd).csv"
