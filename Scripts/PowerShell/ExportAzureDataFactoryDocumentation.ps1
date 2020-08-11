@@ -12,7 +12,7 @@
     Module descriptions are in https://docs.microsoft.com/en-us/dotnet/api/microsoft.azure.commands.datafactoryv2.models?view=azurerm-ps
 
 .EXAMPLE
-   ExportAzureDataFactoryDocumentation -TenantId "XXXXXX-XXXXXX-XXXXXX-XXXXXX"
+   ExportAzureDataFactoryDocumentation -TenantId "XXXXXX-XXXXXX-XXXXXX-XXXXXX" -OutputFolder "C:\Temp\"
 #>
     Param
     (
