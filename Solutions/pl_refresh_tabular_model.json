@@ -1,0 +1,59 @@
+{
+    "name": "pl_refresh_tabular_model",
+    "properties": {
+        "description": "Refreshes Azure Analysis Services tabular model asynchronously. ",
+        "activities": [
+            {
+                "name": "RefreshTabularModel",
+                "description": "Executes Azure Analysi Services REST API to refresh model.",
+                "type": "WebActivity",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "url": {
+                        "value": "@concat('https://',pipeline().parameters.Region,'.asazure.windows.net/servers/',pipeline().parameters.ServerName,'/models/',pipeline().parameters.ModelName,'/refreshes')",
+                        "type": "Expression"
+                    },
+                    "method": "POST",
+                    "body": {
+                        "value": "@concat(\n'{\n    \"Type\": \"',pipeline().parameters.RefreshType,'\",\n    \"CommitMode\": \"transactional\",\n    \"MaxParallelism\":10,\n    \"RetryCount\": 2,\n    }'\n\n\n)",
+                        "type": "Expression"
+                    },
+                    "authentication": {
+                        "type": "MSI",
+                        "resource": "https://*.asazure.windows.net"
+                    }
+                }
+            }
+        ],
+        "parameters": {
+            "Region": {
+                "type": "string",
+                "defaultValue": "australiaeast"
+            },
+            "ServerName": {
+                "type": "string",
+                "defaultValue": "asdataanalyticsprd"
+            },
+            "ModelName": {
+                "type": "string",
+                "defaultValue": "AWDataAnalytics"
+            },
+            "RefreshType": {
+                "type": "string"
+            }
+        },
+        "annotations": [
+            "Analysis Services"
+        ],
+        "lastPublishTime": "2020-11-13T07:03:47Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}
