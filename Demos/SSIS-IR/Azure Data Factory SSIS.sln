@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29424.173
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Azure Data Factory SSIS", "Azure Data Factory SSIS\Azure Data Factory SSIS.dtproj", "{E2C843DC-9E9D-4C2A-85A0-919DCB58CA12}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Development|Default = Development|Default
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E2C843DC-9E9D-4C2A-85A0-919DCB58CA12}.Development|Default.ActiveCfg = Development
+		{E2C843DC-9E9D-4C2A-85A0-919DCB58CA12}.Development|Default.Build.0 = Development
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D24C8F30-3E19-4F6B-999A-0355AC9D95A5}
+	EndGlobalSection
+EndGlobal
