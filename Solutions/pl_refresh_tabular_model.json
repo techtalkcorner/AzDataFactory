@@ -5,7 +5,7 @@
         "activities": [
             {
                 "name": "RefreshTabularModel",
-                "description": "Executes Azure Analysi Services REST API to refresh model.",
+                "description": "Executes Azure Analysis Services REST API to refresh model.",
                 "type": "WebActivity",
                 "dependsOn": [],
                 "policy": {
