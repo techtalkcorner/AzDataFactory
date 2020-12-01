@@ -1,0 +1,75 @@
+{
+    "name": "pl_scale_synapseanalytics_workspace",
+    "properties": {
+        "description": "Scales Azure Synapse Analytics SQL Pool that has been created in Azure Synapse Analytics Workspaces",
+        "activities": [
+            {
+                "name": "Scale Azure Synapse Analytics",
+                "description": "Scales Azure Synapse Analytics created in Azure Synapse Analytics Workspaces using REST APIs",
+                "type": "WebActivity",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "url": {
+                        "value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionId,'/resourceGroups/',pipeline().parameters.ResourceGroupName,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools/',pipeline().parameters.DatabaseName,'?api-version=2019-06-01-preview')",
+                        "type": "Expression"
+                    },
+                    "connectVia": {
+                        "referenceName": "AutoResolveIntegrationRuntime",
+                        "type": "IntegrationRuntimeReference"
+                    },
+                    "method": "PATCH",
+                    "body": {
+                        "value": "@concat(\n'{\n \"sku\": {\n    \"name\": ''',pipeline().parameters.DWU,'''\n  }\n\n}'\n\n)",
+                        "type": "Expression"
+                    },
+                    "authentication": {
+                        "type": "MSI",
+                        "resource": "https://management.azure.com/"
+                    }
+                }
+            }
+        ],
+        "parameters": {
+            "SubscriptionId": {
+                "type": "string",
+                "defaultValue": "b28149e7-f6d0-4008-adda-168958c87bc4"
+            },
+            "ResourceGroupName": {
+                "type": "string",
+                "defaultValue": "rg-dataanalytics"
+            },
+            "Region": {
+                "type": "string",
+                "defaultValue": "australiaeast"
+            },
+            "ServerName": {
+                "type": "string",
+                "defaultValue": "sql-dataanalytics"
+            },
+            "DatabaseName": {
+                "type": "string",
+                "defaultValue": "syn-sqlpool-dataanalytics"
+            },
+            "DWU": {
+                "type": "string",
+                "defaultValue": "DW400c"
+            }
+        },
+        "folder": {
+            "name": "Manage"
+        },
+        "annotations": [
+            "Synapse Analytics"
+        ],
+        "lastPublishTime": "2020-11-13T07:03:47Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}

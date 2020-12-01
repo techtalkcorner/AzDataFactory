@@ -1,0 +1,69 @@
+{
+    "name": "pl_scale_synapseanalytics_standalone",
+    "properties": {
+        "description": "Scales Azure Synapse Analytics SQL Pool that is NOT hosted in Azure Synapse Analytics Workspaces and has been created as a standalone service",
+        "activities": [
+            {
+                "name": "Scale Azure Synapse Analytics",
+                "description": "Scales Azure Synapse Analytics that has been created as a standalone service using REST APIs",
+                "type": "WebActivity",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "url": {
+                        "value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionId,'/resourceGroups/',pipeline().parameters.ResourceGroupName,'/providers/Microsoft.Sql/servers/',pipeline().parameters.ServerName,'/databases/',pipeline().parameters.DatabaseName,'?api-version=2014-04-01-preview')",
+                        "type": "Expression"
+                    },
+                    "connectVia": {
+                        "referenceName": "AutoResolveIntegrationRuntime",
+                        "type": "IntegrationRuntimeReference"
+                    },
+                    "method": "PATCH",
+                    "body": {
+                        "value": "@concat(\n'{\n    \"properties\": {\n        \"requestedServiceObjectiveName\": ''',pipeline().parameters.DWU,'''\n    }\n}'\n)\n",
+                        "type": "Expression"
+                    },
+                    "authentication": {
+                        "type": "MSI",
+                        "resource": "https://management.azure.com/"
+                    }
+                }
+            }
+        ],
+        "parameters": {
+            "SubscriptionId": {
+                "type": "string"
+            },
+            "ResourceGroupName": {
+                "type": "string"
+            },
+            "Region": {
+                "type": "string"
+            },
+            "ServerName": {
+                "type": "string"
+            },
+            "DatabaseName": {
+                "type": "string"
+            },
+            "DWU": {
+                "type": "string"
+            }
+        },
+        "folder": {
+            "name": "Manage"
+        },
+        "annotations": [
+            "Synapse Analytics"
+        ],
+        "lastPublishTime": "2020-11-13T07:03:47Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}
