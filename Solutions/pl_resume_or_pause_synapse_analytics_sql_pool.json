@@ -1,7 +1,7 @@
 {
     "name": "pl_resume_or_pause_synapse_analytics_sql_pool",
     "properties": {
-        "description": "Scales Azure Synapse Analytics SQL Pool that has been created in Azure Synapse Analytics Workspaces",
+        "description": "Scales Azure Synapse Analytics SQL Pool that has been created in Azure Synapse Analytics Workspaces. Created by https://techtalkcorner.com.",
         "activities": [
             {
                 "name": "Check Azure Synapse Analytics Status",
@@ -32,7 +32,7 @@
                 }
             },
             {
-                "name": "Pause",
+                "name": "Resume or Pause",
                 "type": "IfCondition",
                 "dependsOn": [
                     {
@@ -45,18 +45,18 @@
                 "userProperties": [],
                 "typeProperties": {
                     "expression": {
-                        "value": "@and(equals(activity('Check Azure Synapse Analytics Status').output.properties.status,'Online'), equals(pipeline().parameters.Command,'Pause'))",
+                        "value": "@or(and(equals(activity('Check Azure Synapse Analytics Status').output.properties.status,'Online'), equals(pipeline().parameters.Command,'Pause')),and(equals(activity('Check Azure Synapse Analytics Status').output.properties.status,'Paused'), equals(pipeline().parameters.Command,'Resume')))",
                         "type": "Expression"
                     },
                     "ifTrueActivities": [
                         {
-                            "name": "Pause Azure Synapse Analytics",
+                            "name": "Resume or Pause Azure Synapse Analytics",
                             "description": "Pause Azure Synapse Analytics created in Azure Synapse Analytics Workspaces using REST APIs",
                             "type": "WebActivity",
                             "dependsOn": [],
                             "policy": {
                                 "timeout": "7.00:00:00",
-                                "retry": 0,
+                                "retry": 3,
                                 "retryIntervalInSeconds": 30,
                                 "secureOutput": false,
                                 "secureInput": false
@@ -89,87 +89,28 @@
                         }
                     ]
                 }
-            },
-            {
-                "name": "Resume",
-                "type": "IfCondition",
-                "dependsOn": [
-                    {
-                        "activity": "Pause",
-                        "dependencyConditions": [
-                            "Succeeded"
-                        ]
-                    }
-                ],
-                "userProperties": [],
-                "typeProperties": {
-                    "expression": {
-                        "value": "@and(equals(activity('Check Azure Synapse Analytics Status').output.properties.status,'Paused'), equals(pipeline().parameters.Command,'Resume'))",
-                        "type": "Expression"
-                    },
-                    "ifTrueActivities": [
-                        {
-                            "name": "Resume Synapse Analytics",
-                            "description": "Start Azure Synapse Analytics created in Azure Synapse Analytics Workspaces using REST APIs",
-                            "type": "WebActivity",
-                            "dependsOn": [],
-                            "policy": {
-                                "timeout": "7.00:00:00",
-                                "retry": 0,
-                                "retryIntervalInSeconds": 30,
-                                "secureOutput": false,
-                                "secureInput": false
-                            },
-                            "userProperties": [
-                                {
-                                    "name": "Azure Synapse Analytics",
-                                    "value": "Start"
-                                }
-                            ],
-                            "typeProperties": {
-                                "url": {
-                                    "value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionId,'/resourceGroups/',pipeline().parameters.ResourceGroupName,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.ServerName,'/sqlPools/',pipeline().parameters.DatabaseName,'/',pipeline().parameters.Command,'?api-version=2019-06-01-preview')",
-                                    "type": "Expression"
-                                },
-                                "connectVia": {
-                                    "referenceName": "AutoResolveIntegrationRuntime",
-                                    "type": "IntegrationRuntimeReference"
-                                },
-                                "method": "POST",
-                                "body": {
-                                    "value": "{}",
-                                    "type": "Expression"
-                                },
-                                "authentication": {
-                                    "type": "MSI",
-                                    "resource": "https://management.azure.com/"
-                                }
-                            }
-                        }
-                    ]
-                }
             }
         ],
         "parameters": {
             "SubscriptionId": {
                 "type": "string",
-                "defaultValue": "982681a3-34c0-4949-a06f-63bd0ada5d72"
+                "defaultValue": ""
             },
             "ResourceGroupName": {
                 "type": "string",
-                "defaultValue": "rg-moderndatawarehouse-dev"
+                "defaultValue": ""
             },
             "Region": {
                 "type": "string",
-                "defaultValue": "australiaeast"
+                "defaultValue": ""
             },
             "ServerName": {
                 "type": "string",
-                "defaultValue": "synwsdataanalyticsdevaue"
+                "defaultValue": ""
             },
             "DatabaseName": {
                 "type": "string",
-                "defaultValue": "DataWarehouse"
+                "defaultValue": ""
             },
             "Command": {
                 "type": "string",
