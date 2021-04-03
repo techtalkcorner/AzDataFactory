@@ -1,7 +1,7 @@
 {
     "name": "pl_resume_or_pause_synapse_analytics_sql_pool",
     "properties": {
-        "description": "Scales Azure Synapse Analytics SQL Pool that has been created in Azure Synapse Analytics Workspaces. Created by https://techtalkcorner.com.",
+        "description": "Resume or Pause Azure Synapse Analytics SQL Pool that has been created in Azure Synapse Analytics Workspaces. Created by https://techtalkcorner.com.",
         "activities": [
             {
                 "name": "Check Azure Synapse Analytics Status",
@@ -64,7 +64,7 @@
                             "userProperties": [
                                 {
                                     "name": "Azure Synapse Analytics",
-                                    "value": "Pause"
+                                    "value": "Resume or Pause"
                                 }
                             ],
                             "typeProperties": {
