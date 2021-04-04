@@ -1,0 +1,125 @@
+{
+    "name": "pl_start_or_stop_azure_vm",
+    "properties": {
+        "description": "Starts or Stops Azure VM",
+        "activities": [
+            {
+                "name": "Check Azure VM Status",
+                "type": "WebActivity",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "url": {
+                        "value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionId,'/resourceGroups/',pipeline().parameters.ResourceGroupName,'/providers/Microsoft.Compute/virtualMachines/',pipeline().parameters.VMName,'/InstanceView?api-version=2020-12-01')",
+                        "type": "Expression"
+                    },
+                    "connectVia": {
+                        "referenceName": "AutoResolveIntegrationRuntime",
+                        "type": "IntegrationRuntimeReference"
+                    },
+                    "method": "GET",
+                    "authentication": {
+                        "type": "MSI",
+                        "resource": "https://management.azure.com/"
+                    }
+                }
+            },
+            {
+                "name": "Start or Deallocate",
+                "type": "IfCondition",
+                "dependsOn": [
+                    {
+                        "activity": "Check Azure VM Status",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@or(and(equals(activity('Check Azure VM Status').output.statuses[1].displayStatus,'VM deallocated'), equals(pipeline().parameters.Command,'Start')),and(equals(activity('Check Azure VM Status').output.statuses[1].displayStatus,'VM running'), equals(pipeline().parameters.Command,'Deallocate')))",
+                        "type": "Expression"
+                    },
+                    "ifTrueActivities": [
+                        {
+                            "name": "Start or Pause Azure VM",
+                            "description": "Start or Pause Azure VM using REST APIs",
+                            "type": "WebActivity",
+                            "dependsOn": [],
+                            "policy": {
+                                "timeout": "7.00:00:00",
+                                "retry": 3,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [
+                                {
+                                    "name": "Azure VM",
+                                    "value": "Pause"
+                                }
+                            ],
+                            "typeProperties": {
+                                "url": {
+                                    "value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionId,'/resourceGroups/',pipeline().parameters.ResourceGroupName,'/providers/Microsoft.Compute/virtualMachines/',pipeline().parameters.VMName,'/',pipeline().parameters.Command,'?api-version=2020-12-01')",
+                                    "type": "Expression"
+                                },
+                                "connectVia": {
+                                    "referenceName": "AutoResolveIntegrationRuntime",
+                                    "type": "IntegrationRuntimeReference"
+                                },
+                                "method": "POST",
+                                "body": {
+                                    "value": "{}",
+                                    "type": "Expression"
+                                },
+                                "authentication": {
+                                    "type": "MSI",
+                                    "resource": "https://management.azure.com/"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ],
+        "parameters": {
+            "SubscriptionId": {
+                "type": "string",
+                "defaultValue": "b28149e7-f6d0-4008-adda-168958c87bc4"
+            },
+            "ResourceGroupName": {
+                "type": "string",
+                "defaultValue": "rg-dataanalytics"
+            },
+            "Region": {
+                "type": "string",
+                "defaultValue": "australiaeast"
+            },
+            "VMName": {
+                "type": "string",
+                "defaultValue": "vm-test-start-stop"
+            },
+            "Command": {
+                "type": "string",
+                "defaultValue": "Start"
+            }
+        },
+        "folder": {
+            "name": "Manage"
+        },
+        "annotations": [
+            "Synapse Analytics"
+        ],
+        "lastPublishTime": "2020-11-13T07:03:47Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}
