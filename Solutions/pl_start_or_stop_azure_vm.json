@@ -94,19 +94,19 @@
         "parameters": {
             "SubscriptionId": {
                 "type": "string",
-                "defaultValue": "b28149e7-f6d0-4008-adda-168958c87bc4"
+                "defaultValue": ""
             },
             "ResourceGroupName": {
                 "type": "string",
-                "defaultValue": "rg-dataanalytics"
+                "defaultValue": ""
             },
             "Region": {
                 "type": "string",
-                "defaultValue": "australiaeast"
+                "defaultValue": ""
             },
             "VMName": {
                 "type": "string",
-                "defaultValue": "vm-test-start-stop"
+                "defaultValue": ""
             },
             "Command": {
                 "type": "string",
