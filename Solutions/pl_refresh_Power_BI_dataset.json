@@ -1,0 +1,127 @@
+{
+    "name": "pl_refresh_Power_BI_dataset",
+    "properties": {
+        "description": "Refresh a Power BI dataset",
+        "activities": [
+            {
+                "name": "Refresh Power BI Dataset",
+                "description": "Refreshes a Power BI dataset",
+                "type": "WebActivity",
+                "dependsOn": [],
+                "policy": {
+                    "timeout": "7.00:00:00",
+                    "retry": 0,
+                    "retryIntervalInSeconds": 30,
+                    "secureOutput": false,
+                    "secureInput": false
+                },
+                "userProperties": [],
+                "typeProperties": {
+                    "url": {
+                        "value": "@concat('https://api.powerbi.com/v1.0/myorg/groups/',pipeline().parameters.WorkspaceId,'/datasets/',pipeline().parameters.DatasetId,'/refreshes')",
+                        "type": "Expression"
+                    },
+                    "connectVia": {
+                        "referenceName": "AutoResolveIntegrationRuntime",
+                        "type": "IntegrationRuntimeReference"
+                    },
+                    "method": "POST",
+                    "body": {
+                        "value": "{}",
+                        "type": "Expression"
+                    },
+                    "authentication": {
+                        "type": "MSI",
+                        "resource": "https://analysis.windows.net/powerbi/api"
+                    }
+                }
+            },
+            {
+                "name": "Until Refresh Completion",
+                "type": "Until",
+                "dependsOn": [
+                    {
+                        "activity": "Refresh Power BI Dataset",
+                        "dependencyConditions": [
+                            "Succeeded"
+                        ]
+                    }
+                ],
+                "userProperties": [],
+                "typeProperties": {
+                    "expression": {
+                        "value": "@or(equals(activity('Get Power BI Dataset status').output.value[0].status,'Completed'),equals(activity('Get Power BI Dataset status').output.value[0].status,'Failed'))",
+                        "type": "Expression"
+                    },
+                    "activities": [
+                        {
+                            "name": "Get Power BI Dataset status",
+                            "description": "Get status refresh Power BI dataset",
+                            "type": "WebActivity",
+                            "dependsOn": [
+                                {
+                                    "activity": "Wait 30 Seconds",
+                                    "dependencyConditions": [
+                                        "Succeeded"
+                                    ]
+                                }
+                            ],
+                            "policy": {
+                                "timeout": "7.00:00:00",
+                                "retry": 0,
+                                "retryIntervalInSeconds": 30,
+                                "secureOutput": false,
+                                "secureInput": false
+                            },
+                            "userProperties": [],
+                            "typeProperties": {
+                                "url": {
+                                    "value": "@concat('https://api.powerbi.com/v1.0/myorg/groups/',pipeline().parameters.WorkspaceId,'/datasets/',pipeline().parameters.DatasetId,'/refreshes?$top=1')",
+                                    "type": "Expression"
+                                },
+                                "connectVia": {
+                                    "referenceName": "AutoResolveIntegrationRuntime",
+                                    "type": "IntegrationRuntimeReference"
+                                },
+                                "method": "GET",
+                                "body": {
+                                    "ScheduleNotifyOption": "MailOnCompletion"
+                                },
+                                "authentication": {
+                                    "type": "MSI",
+                                    "resource": "https://analysis.windows.net/powerbi/api"
+                                }
+                            }
+                        },
+                        {
+                            "name": "Wait 30 Seconds",
+                            "type": "Wait",
+                            "dependsOn": [],
+                            "userProperties": [],
+                            "typeProperties": {
+                                "waitTimeInSeconds": 30
+                            }
+                        }
+                    ],
+                    "timeout": "7.00:00:00"
+                }
+            }
+        ],
+        "parameters": {
+            "WorkspaceId": {
+                "type": "string"
+            },
+            "DatasetId": {
+                "type": "string"
+            }
+        },
+        "folder": {
+            "name": "Manage"
+        },
+        "annotations": [
+            "Power BI"
+        ],
+        "lastPublishTime": "2020-11-13T07:03:47Z"
+    },
+    "type": "Microsoft.DataFactory/factories/pipelines"
+}
