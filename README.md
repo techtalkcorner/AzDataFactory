@@ -1,21 +1,23 @@
 # AzDataFactory
-Azure Data Factory information
+Welcome to my Azure Data Factory repository.
 
-## Export Azure Data Factory information to files
-### Download the script
-Get the script from the following link.
+In this repository, you will find:
 
-https://github.com/techtalkcorner/AzDataFactory/blob/master/Scripts/PowerShell/ExportAzureDataFactoryDocumentation.ps1
+## Solutions
 
-### Pre-requirements 
+Refresh Power BI Dataset (https://www.techtalkcorner.com/refresh-power-bi-reports/)
+Refresh Azure Analysis Services tabular model (https://www.techtalkcorner.com/azure-data-factory-refresh-analysis-services/)
+Resume or Pause Azure Synapse Analytics SQL Pool (standalone) (https://www.techtalkcorner.com/pause-and-resume-azure-synapse-analytics/)
+Resume or Pause Azure Synapse Analytics SQL Pool (in workspaces) (https://www.techtalkcorner.com/pause-and-resume-azure-synapse-analytics/)
+Scale Azure Synapse Analytics SQL Pool (standalone) (https://www.techtalkcorner.com/scale-azure-synapse-analytics-with-azure-data-factory/)
+Scale Azure Synapse Analytics SQL Pool (in workspaces) (https://www.techtalkcorner.com/scale-azure-synapse-analytics-with-azure-data-factory/)
+Start or Stop Azure VM (https://www.techtalkcorner.com/start-and-stop-azure-vm/)
 
-Before you can run the script, you need to download the Az Module and log into the Azure tenant. 
+## Scripts
+Get Azure Data Factory Managed Identity
+Export Azure Data Factory Documentation (https://www.techtalkcorner.com/documenting-azure-data-factory/)
+Upload Private SSHKey Azure Key Vault (https://www.techtalkcorner.com/upload-ssh-key-azure-key-vault/)
 
-Install-Module -Name Az 
+## Others
+Azure Data Factory Connectors Power BI Report
 
-Connect-AzAccount 
-
-### EXECUTE SCRIPT 
-The script only has 1 parameter (TenantId). To execute the script, run the following command: 
-
-.\ExportAzureDataFactoryDocumentation.ps1 -TenantId XXXXX-XXXXX-XXXXX-XXXXX -OutputFolder "C:\SampleFolder\"
