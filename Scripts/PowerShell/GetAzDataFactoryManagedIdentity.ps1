@@ -1,6 +1,7 @@
 # This scripts returns the Azure Data Factory managed identity to give access to other Azure service
 # Install module Azure if it is not available
 # Install-module Az
+# Import-Module Az.DataFactory
 # Pre-requisite, connect to your Azure account
 # Connect-AzAccount
 $AzureDataFactoryName = ""
